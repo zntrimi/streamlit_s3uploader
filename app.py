@@ -18,48 +18,48 @@ s3_client = boto3.client(
 
 # Set page config
 st.set_page_config(
-    page_title="S3 File Uploader",
+    page_title="S3 ファイルアップローダー",
     page_icon="📤",
     layout="wide"
 )
 
 # Title and description
-st.title("📤 S3 File Uploader")
+st.title("📤 S3 ファイルアップローダー")
 st.markdown("""
-This app allows you to upload files to AWS S3 and get their URLs.
-Simply drag and drop your files or click the upload button below.
+このアプリでAWS S3にファイルをアップロードし、URLを取得できます。
+ファイルをドラッグ＆ドロップするか、下のアップロードボタンをクリックしてください。
 """)
 
 # File naming options
-st.subheader("File Naming Options")
+st.subheader("ファイル名の設定")
 naming_option = st.radio(
-    "Choose how to name your files:",
-    ["Use original filename", "Use random filename", "Custom filename"]
+    "ファイル名の設定方法を選択してください：",
+    ["元のファイル名を使用", "ランダムな名前を使用", "カスタム名を使用"]
 )
 
 # File uploader with multiple files support
 uploaded_files = st.file_uploader(
-    "Choose files to upload",
+    "アップロードするファイルを選択",
     type=None,
     accept_multiple_files=True
 )
 
 if uploaded_files:
     # Display selected files
-    st.subheader("Selected Files")
+    st.subheader("選択されたファイル")
     for file in uploaded_files:
         st.write(f"- {file.name} ({file.size / 1024:.1f} KB)")
 
-    # Custom filename prefix (if custom naming is selected)
+    # Custom filename prefix
     custom_prefix = ""
-    if naming_option == "Custom filename":
-        custom_prefix = st.text_input("Enter filename prefix (without extension):")
+    if naming_option == "カスタム名を使用":
+        custom_prefix = st.text_input("ファイル名のプレフィックスを入力してください（拡張子なし）：")
         if not custom_prefix:
-            st.warning("Please enter a filename prefix")
+            st.warning("プレフィックスを入力してください")
             custom_prefix = None
 
     # Upload button
-    if st.button("Upload Files", type="primary"):
+    if st.button("ファイルをアップロード", type="primary"):
         uploaded_urls = []
         
         for uploaded_file in uploaded_files:
@@ -67,9 +67,9 @@ if uploaded_files:
                 file_extension = os.path.splitext(uploaded_file.name)[1]
                 
                 # Generate filename based on selected option
-                if naming_option == "Use original filename":
+                if naming_option == "元のファイル名を使用":
                     filename = uploaded_file.name
-                elif naming_option == "Use random filename":
+                elif naming_option == "ランダムな名前を使用":
                     filename = f"{uuid.uuid4()}{file_extension}"
                 else:  # Custom filename
                     if custom_prefix:
@@ -97,32 +97,32 @@ if uploaded_files:
                 st.error(f"Error uploading {uploaded_file.name}: {str(e)}")
         
         if uploaded_urls:
-            st.success(f"Successfully uploaded {len(uploaded_urls)} file(s)! 🎉")
+            st.success(f"{len(uploaded_urls)}個のファイルのアップロードが完了しました！ 🎉")
             
             # Display URLs in a table
-            st.subheader("Uploaded Files and URLs")
+            st.subheader("アップロードされたファイルとURL")
             for original_name, url in uploaded_urls:
                 col1, col2 = st.columns([1, 2])
                 with col1:
                     st.write(original_name)
                 with col2:
                     st.code(url, language=None)
-                    if st.button(f"Copy URL for {original_name}", key=f"copy_{original_name}"):
-                        st.write("URL copied to clipboard!")
+                    if st.button(f"{original_name}のURLをコピー", key=f"copy_{original_name}"):
+                        st.write("URLをクリップボードにコピーしました！")
 
 # Add some helpful information
-with st.expander("ℹ️ How to use"):
+with st.expander("ℹ️ 使い方"):
     st.markdown("""
-    1. Select one or more files using the upload button above
-    2. Choose how you want to name your files:
-       - Use original filename: Keeps the original file names
-       - Use random filename: Generates random UUIDs for the file names
-       - Custom filename: Enter a prefix for your files (timestamp will be added automatically)
-    3. Click the "Upload Files" button
-    4. Copy the generated URLs
-    5. Share the URLs with others to access your files
+    1. 上のアップロードボタンを使って1つまたは複数のファイルを選択
+    2. ファイル名の設定方法を選択：
+       - 元のファイル名を使用：アップロード時のファイル名をそのまま使用
+       - ランダムな名前を使用：ファイル名をランダムなIDで生成
+       - カスタム名を使用：プレフィックスを入力（タイムスタンプが自動的に追加されます）
+    3. 「ファイルをアップロード」ボタンをクリック
+    4. 生成されたURLをコピー
+    5. URLを共有してファイルにアクセス
     """)
 
 # Footer
 st.markdown("---")
-st.markdown("Made with ❤️ using Streamlit and AWS S3") 
+st.markdown("Streamlit と AWS S3 で作成 ❤️") 
