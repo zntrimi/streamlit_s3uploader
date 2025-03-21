@@ -109,20 +109,3 @@ if uploaded_files:
                     st.code(url, language=None)
                     if st.button(f"{original_name}のURLをコピー", key=f"copy_{original_name}"):
                         st.write("URLをクリップボードにコピーしました！")
-
-# Add some helpful information
-with st.expander("ℹ️ 使い方"):
-    st.markdown("""
-    1. 上のアップロードボタンを使って1つまたは複数のファイルを選択
-    2. ファイル名の設定方法を選択：
-       - 元のファイル名を使用：アップロード時のファイル名をそのまま使用
-       - ランダムな名前を使用：ファイル名をランダムなIDで生成
-       - カスタム名を使用：プレフィックスを入力（タイムスタンプが自動的に追加されます）
-    3. 「ファイルをアップロード」ボタンをクリック
-    4. 生成されたURLをコピー
-    5. URLを共有してファイルにアクセス
-    """)
-
-# Footer
-st.markdown("---")
-st.markdown("Streamlit と AWS S3 で作成 ❤️") 
